@@ -1,0 +1,43 @@
+1.to open hidden file- gedit ~/.bashrc
+
+2. make the following changes in bashrc to add the flume variables
+#FLUME VARIABLES START
+export FLUME_HOME=/home/nidhi/apache-flume-1.11.0-bin
+export FLUME_CONF_DIR=FLUME_HOME/conf
+export FLUME_CLASSPATH= FLUME_CONF_DIR
+export PATH="$FLUME_HOME/bin:$PATH"
+#FLUME VARIABLES END
+
+3.save the changes in bashrc using
+  source ~/.bashrc
+
+4.download the SNAPSHOT.jar and save it in lib folder of apache flume
+5.go to conf and copy paste the env.sh file and then open the copy to add java path and flume path
+6. go to lib and find files with "twitter-4j" and change their type to org
+7.create twitter-flume.conf file to add all your tokens
+8. mkdir- make user/flume/tweets to store all the data fetched.
+9.go to flume directory and open terminal
+10.run the file using the command
+bin/flume-ng agent -n TwitterAgent --conf ./conf/-f --conf-file conf/flume-twitter.conf -DFlume.root.logger=DEBUG,console
+11. check for the responses on the web app
+
+-------------------------------- MULTIPLEXING--------------------------------------------
+1. make the developer and manager directories using mkdir (these are the ones we define in our conf file)
+2.run the file after opening terminal inside flume directory
+3.open a separate terminal, since our source.type is 'telnet', we establish a connection using the command
+telnet localhost 4444
+4. give the input
+5.check hdfs web app
+
+-------------------------------REPLICATING-------------------------------------------------
+
+1.same process as mutliplexing just replace the selector type
+
+-----------------------------SPOOLING------------------------------------------------------
+
+1. make the conf file 
+2.make a myflume directory on your local file system
+3.make a spooling dir in your hdfs 
+4.run the conf file and save a file in local file system
+5.it will automatically get stored in hdfs 
+

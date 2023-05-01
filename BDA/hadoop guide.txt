@@ -1,0 +1,52 @@
+1.to open hidden file- gedit ~/.bashrc
+
+2.JAVA PATH(JAVA_HOME)=/usr/lib/jvm/java-8-openjdk-amd64/jre/
+
+3.HADOOP PATH(HADOOP_INSTALL)=/home/nidhi/hadoop-3.2.4
+  yarn= yet another resource negotiator
+  hadoop version 2 has 4 components- hdfs,mapreduce,hadoop common(libraries s), yarn(resources)
+
+4.source ~/.bashrc= used to update the changes made in bashrc in shell
+
+5. sudo apt-get install ssh (used to connect the name node to the data nodes)
+
+6. generating SSH key using the command 
+   ssh-keygen -t rsa -P ""
+   
+7. authenticating key using cat $HOME/.ssh/id_rsa.pub>>$HOME/.ssh/authorized_keys   
+
+8. ssh localhost to see if its running
+ 
+9. go to etc file in hadoop
+   update env.sh with JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre
+   
+10. open core-site.xml and add properties 
+    -CREATE THE TMP FOLDER IN YOUR HADOOP DIRECTORY 
+11. open mapred-site.xml and add properties
+12. open hdfs-aite.xml and add properties 
+13. go on terminal and create directories for namenode and datanode 
+sudo mkdir -p /home/nidhi/hadoop-3.2.4/hadoop_store/hdfs/datanode
+14.use the below command to give permissions to the locked folder
+sudo chown -R nidhi:nidhi /home/nidhi/hadoop-3.2.4/hadoop_store
+15. format your hdfs
+hadoop namenode --format
+16. check jps using command 
+jps
+17. start your daemons
+start-all.sh
+
+18.COMMANDS:
+ A. to access ur file system - hdfs dfs -ls /
+ 
+ B. to make directory - hdfs dfs -mkdir /BDA
+ 
+ C. put file from local file system to HDFS
+ hdfs dfs -put /home/nidhi/MyBDA.txt /BDA  OR hdfs dfs -copyFromLocal *same paths*(use copyToLocal to put data from hdfs to local fs)
+ hdfs dfs -ls /BDA
+ hdfs dfs -cat /BDA/MyBDA.txt
+ 
+ 19. to run the jar file
+ -hadoop jar temp.jar WordCountPackage.WordCountClass /BDA/demofruits.txt testop
+ -hdfs dfs -cat /user/nidhi/testop/part-r-00000
+ -
+
