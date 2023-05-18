@@ -1,0 +1,14 @@
+Hadoop commands
+
+1. Once the JAVA file is compiled, create the jar file from 
+file>export>jar and save the jar file in your preferred location
+
+
+2. Use the following command to store the text file on hadoop
+hdfs dfs -put /home/jyotbuch/MyBDA.txt /
+
+3. Run the jar file with the text file which was placed on hadoop
+hadoop jar final.jar WordCountPackage.WordCountClass /MyBDA.txt examOutput
+
+4. To display the output, use the following command
+hdfs dfs -cat <path to>/examOutput/part-r-00000

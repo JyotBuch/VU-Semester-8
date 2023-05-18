@@ -1,0 +1,25 @@
+Flume Commands
+
+
+1. Multiplexing
+
+1.1 Configure conf file for the assingment
+
+1.2 Open the apache flume folder and enter the following command
+bin/flume-ng agent -n <agent name> --conf ./conf/-f --conf-file conf/<conf file name> -DFlume.root.logger=DEBUG,console
+
+1.3 On another terminal open 
+telnet localhost 4444
+
+1.4 Enter the values as per assignment (ctrl+C to exist)
+
+2. Spooling
+
+2.1 Create a spooling directory as mentioned in the conf file in the local file system as well as HDFS
+
+2.2 Run the following command in the Apache Flume folder
+bin/flume-ng agent -n <agent name> --conf ./conf/-f --conf-file conf/<conf file name> -DFlume.root.logger=DEBUG,console
+
+3. Replicating
+
+Follow the same steps as in Multiplexing
