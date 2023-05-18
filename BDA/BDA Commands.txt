@@ -1,0 +1,174 @@
+NOTE - PLEASE CHANGE THE NAME OF AGENTS, DIRECTORIES, FILE NAMES ACCORDING TO YOUR SYSTEM
+----------------------------------------------------------------------------------------------------------------------------------
+MULTIPLEXING- 
+bin/flume-ng agent -n a1 --conf ./con-f --conf-file conf/multiplexing.conf -Dflume.root.logger=DEBUG,console
+----------------------------------------------------------------------------------------------------------------------------------
+REPLICATING-
+bin/flume-ng agent -n a1 --conf ./con-f --conf-file conf/replicating.conf -Dflume.root.logger=DEBUG,console
+----------------------------------------------------------------------------------------------------------------------------------
+SPOOLING-
+bin/flume-ng agent -n a1 --conf ./con-f --conf-file conf/spool_dir.conf -Dflume.root.logger=DEBUG,console
+----------------------------------------------------------------------------------------------------------------------------------
+WORDCOUNT-
+hadoop-2.7.7/bin/hadoop jar temp.jar WordCountPackage.WordCount demofruits.txt  testfruitsoutput
+hdfs dfs -cat /user/shaunak/testfruitsoutput/part-r-00000
+----------------------------------------------------------------------------------------------------------------------------------
+Hive- To open hive - 
+1. Go inside apache-hive-3.1.2-bin/bin
+2. Open in terminal
+3. hive
+----------------------------------------------------------------------------------------------------------------------------------
+CREATE A TABLE IN HIVE - 
+ CREATE TABLE IF NOT EXISTS employee ( eid int, name String, salary String, destination String)
+COMMENT ‘Employee details’
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ‘\t’
+LINES TERMINATED BY ‘\n’
+STORED AS TEXTFILE;
+----------------------------------------------------------------------------------------------------------------------------------
+Load data in hive -  LOAD DATA LOCAL INPATH '/home/mamoon/emp.txt‘ OVERWRITE INTO TABLE employee;
+----------------------------------------------------------------------------------------------------------------------------------
+PARTITIONING IN HIVE - 
+1. Creation of Table all states
+create table allstates(state string, District string,Enrolments string)
+row format delimited
+fields terminated by ',';
+
+2.Loading data into created table allstates:
+Load data local inpath '/home/mamoon/test.csv' into table allstates;
+
+3.Creation of partition table
+create table state_part(District string,Enrolments string) PARTITIONED BY(state string);
+
+4.For partition we have to set this property
+set hive.exec.dynamic.partition.mode=nonstrict
+
+5.Loading data into partition table
+INSERT OVERWRITE TABLE state_part PARTITION(state)
+SELECT district,enrolments,state from  allstates;
+----------------------------------------------------------------------------------------------------------------------------------
+BUCKETING IN HIVE - 
+1.create table emp_demo (Id int, Name string , Salary float)    
+row format delimited    
+fields terminated by ',';
+
+2.load data local inpath '/home/codegyani/hive/emp_details' into table emp_demo;     
+
+3.set hive.enforce.bucketing = true;  
+
+4.create table emp_bucket(Id int, Name string , Salary float)    
+clustered by (Id) into 3 buckets  
+row format delimited    
+fields terminated by ',' ;
+
+5.insert overwrite table emp_bucket select * from emp_demo;
+----------------------------------------------------------------------------------------------------------------------------------
+APACHE PIG
+Reading Data in Apache Pig:
+
+Step1: Prepare HDFS File Storage.
+
+In MapReduce mode, Pig reads (loads) data from HDFS and stores the results back in HDFS. Therefore, let us start HDFS and load employ.txt file from local system to HDFS.
+
+Step2: Create Directory in HDFS 
+
+$ hdfs dfs –mkdir /home/PigData
+
+Step3: Place the data in HDFS Directory
+
+$hadoop fs –copyFromLocal /home/mamoon/employ.txt   /home/PigData/
+
+Step4: Verifying Loaded File employ.txt on HDFS
+
+$hdfs dfs -cat /home/PigData/employ.txt
+
+Step5: Load data into Apache Pig from the file system (HDFS/ Local) using LOAD operator of Pig Latin.
+Syntax of Load Operator:
+
+	Relation_name = LOAD 'Input file path' USING function as schema;
+Where,
+relation_name − We have to mention the relation in which we want to store the data.
+Input file path − We have to mention the HDFS directory where the file is stored. (In MapReduce mode)
+function − We have to choose a function from the set of load functions provided by Apache Pig (BinStorage, JsonLoader, PigStorage, TextLoader).
+Schema − We have to define the schema of the data. We can define the required schema as follows −
+	(column1 : data type, column2 : data type, column3 : data type);
+
+Step6: Start the Pig Grunt shell
+
+$ pig
+
+Step7: Execute the Load Statement
+
+grunt> employee= LOAD ‘/home/PigData/employ.txt’ 
+      USING PigStorage(‘,’)
+      as (id:int, name:chararray, age:int, address:chararray, salary:int, department:chararray);
+----------------------------------------------------------------------------------------------------------------------------------      
+Storing Data in Apache Pig:
+
+We can store the loaded data in the file system using the store operator.
+
+Syntax of store operator:
+
+	STORE Relation_name INTO ' required_directory_path ' [USING function];
+
+ Store the relation in the HDFS directory “/PigOut/” as shown below.
+
+	grunt> STORE employee INTO ' /home/PigData/PigOut/' USING PigStorage (',');
+----------------------------------------------------------------------------------------------------------------------------------
+GROUP BY - 
+Group_data = GROUP Relation_name BY age;
+dump Group_data
+----------------------------------------------------------------------------------------------------------------------------------
+GROUP ALL
+group_all = GROUP employee All;
+dump group_all
+----------------------------------------------------------------------------------------------------------------------------------
+SELF JOIN - 
+customers3 = JOIN customers1 BY id, customers2 BY id;
+dump customers3
+----------------------------------------------------------------------------------------------------------------------------------
+INNER JOIN - 
+customer_orders = JOIN customers BY id, orders BY customer_id;
+dump customer_orders
+----------------------------------------------------------------------------------------------------------------------------------
+LEFT OUTER JOIN - 
+outer_left = JOIN customers BY id LEFT OUTER, orders BY customer_id;
+dump outer_left
+----------------------------------------------------------------------------------------------------------------------------------
+RIGHT OUTER JOIN - 
+outer_right = JOIN customers BY id RIGHT, orders BY customer_id;
+dump outer_right
+----------------------------------------------------------------------------------------------------------------------------------
+FULL OUTER JOIN - 
+outer_full = JOIN customers BY id FULL OUTER, orders BY customer_id;
+dump outer_full
+----------------------------------------------------------------------------------------------------------------------------------
+COMBINING - 
+student = UNION student1, student2;
+dump student
+----------------------------------------------------------------------------------------------------------------------------------
+SPLITTING - 
+SPLIT student_details into student_details1 if age<23, student_details2 if (22<age and age>25);
+dump student_details1
+dump student_details2
+----------------------------------------------------------------------------------------------------------------------------------
+FILTERING - 
+filter_data = FILTER student_details BY city == 'Chennai';
+dump filter_data
+----------------------------------------------------------------------------------------------------------------------------------
+SORTING - 
+order_by_data = ORDER student_details BY age DESC;
+dump order_by_data
+----------------------------------------------------------------------------------------------------------------------------------
+DISTINCT - 
+distinct_data = DISTINCT student_details;
+dump distinct_data
+----------------------------------------------------------------------------------------------------------------------------------
+FOREACH - 
+foreach_data = FOREACH student_details GENERATE id,age,city;
+dump foreach_data
+----------------------------------------------------------------------------------------------------------------------------------
+LIMIT - 
+limit_data = LIMIT student_details 4; 
+dump limit_data
+----------------------------------------------------------------------------------------------------------------------------------
